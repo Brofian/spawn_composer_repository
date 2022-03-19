@@ -1,0 +1,17 @@
+{
+  "name": "spawn/composer_repository",
+  "description": "S.P.A.W.N. Composer Repository Module",
+  "license": "proprietary",
+
+  "authors": [
+    {
+      "name": "Fabian Holzwarth"
+    }
+  ],
+
+  "autoload": {
+    "psr-4" : {
+      "SpawnComposerRepository\\" : "src"
+    }
+  }
+}
