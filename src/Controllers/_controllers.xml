@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<services>
+
+    <service id="composer_repository.controller.composer" class="SpawnComposerRepository\Controllers">
+        <tag>base.controller</tag>
+    </service>
+
+</services>

@@ -2,5 +2,26 @@
 
 <plugin>
 
+    <resources>
+        <namespace>SpawnComposerRepository</namespace>
+        <path>/src/Resources</path>
+        <weight>1</weight>
+        <using>
+        </using>
+    </resources>
+
+
+    <info>
+        <author>Fabian Holzwarth</author>
+        <version>0.0.1</version>
+    </info>
+
+    <services>
+
+        <import file="/src/Controllers/_controllers.xml"/>
+        <import file="/src/Services/_services.xml"/>
+        <import file="/src/Database/_database.xml"/>
+
+    </services>
 
 </plugin>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<services>
+
+    <!-- Composer Repository -->
+    <service id="composer_repository.database.table.composer_repo" class="SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoTable" static="true">
+        <tag>database.table</tag>
+    </service>
+
+    <service id="composer_repository.repository.composer_repo" class="SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoRepository" static="true">
+        <argument type="service" value="system.database.table.administrator" />
+        <tag>base.service.static</tag>
+    </service>
+
+
+</services>
