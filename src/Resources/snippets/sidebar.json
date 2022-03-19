@@ -1,0 +1,13 @@
+{
+  "EN": {
+    "backend": {
+      "sidebar": {
+        "branch": {
+          "title": {
+            "composer": "Composer"
+          }
+        }
+      }
+    }
+  }
+}

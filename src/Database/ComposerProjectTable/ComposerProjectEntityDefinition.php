@@ -1,38 +1,33 @@
 <?php declare(strict_types = 1);
-namespace SpawnComposerRepository\Database\ComposerRepoTable;
+namespace SpawnComposerRepository\Database\ComposerProjectTable;
 
 
 use DateTime;
+use SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoRepository;
 use SpawnCore\System\Database\Entity\Entity;
 use SpawnCore\System\Database\Entity\EntityTraits\EntityCreatedAtTrait;
 use SpawnCore\System\Database\Entity\EntityTraits\EntityIDTrait;
 use SpawnCore\System\Database\Entity\EntityTraits\EntityUpdatedAtTrait;
 
-class ComposerRepoEntityDefinition extends Entity
+class ComposerProjectEntityDefinition extends Entity
 {
     use EntityIDTrait;
     use EntityUpdatedAtTrait;
     use EntityCreatedAtTrait;
 
-    protected ?string $projectId = null;
     protected string $name;
     protected string $data;
-    protected bool $active;
 
     public function __construct(
         string $name,
         string $data,
-        ?string $projectId = null,
-        bool $active = false,
         ?string $id = null,
         ?DateTime $createdAt = null,
         ?DateTime $updatedAt = null
     )
     {
-        $this->setProjectId($projectId);
         $this->setName($name);
         $this->setData($data);
-        $this->setActive($active);
         $this->setId($id);
         $this->setUpdatedAt($updatedAt);
         $this->setCreatedAt($createdAt);
@@ -41,17 +36,15 @@ class ComposerRepoEntityDefinition extends Entity
 
     public function getRepositoryClass(): string
     {
-        return ComposerRepoRepository::class;
+        return ComposerProjectRepository::class;
     }
 
     public function toArray(): array
     {
         return [
             'id' => $this->getId(),
-            'projectId' => $this->getProjectId(),
             'name' => $this->getName(),
             'data' => $this->getData(),
-            'active' => $this->isActive(),
             'updatedAt' => $this->getUpdatedAt(),
             'createdAt' => $this->getCreatedAt(),
         ];
@@ -62,11 +55,9 @@ class ComposerRepoEntityDefinition extends Entity
         $values['updatedAt'] = self::getDateTimeFromVariable($values['updatedAt'] ?? null);
         $values['createdAt'] = self::getDateTimeFromVariable($values['createdAt'] ?? null);
 
-        return new ComposerRepoEntity(
+        return new ComposerProjectEntity(
             $values['name'],
             $values['data'],
-            $values['projectId'] ?? null,
-            (bool)($values['active'] ?? false),
             $values['id'] ?? null,
             $values['createdAt'] ?? null,
             $values['updatedAt'] ?? null
@@ -94,29 +85,6 @@ class ComposerRepoEntityDefinition extends Entity
         $this->data = $data;
         return $this;
     }
-
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
-    public function getProjectId(): ?string
-    {
-        return $this->projectId;
-    }
-
-    public function setProjectId(?string $projectId): self
-    {
-        $this->projectId = $projectId;
-        return $this;
-    }
-
 
 
 

@@ -2,4 +2,13 @@
 
 <services>
 
+    <service id="composer_repository.service.composer_project_service" class="SpawnComposerRepository\Services\ComposerProjectService">
+        <argument type="service" value="composer_repository.repository.composer_project" />
+    </service>
+
+
+    <service id="composer_repository.service.composerRepositoryService" class="SpawnComposerRepository\Services\ComposerRepositoryService">
+        <argument type="service" value="composer_repository.repository.composer_repo" />
+    </service>
+
 </services>

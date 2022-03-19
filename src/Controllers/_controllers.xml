@@ -2,8 +2,13 @@
 
 <services>
 
-    <service id="composer_repository.controller.composer" class="SpawnComposerRepository\Controllers">
+    <service id="composer_repository.controller.composer" class="SpawnComposerRepository\Controllers\ComposerController">
         <tag>base.controller</tag>
+    </service>
+
+    <service id="composer_repository.backend_controller.composer" class="SpawnComposerRepository\Controllers\ComposerBackendController">
+        <argument type="service" value="composer_repository.service.composer_project_service" />
+        <tag>backend.controller</tag>
     </service>
 
 </services>

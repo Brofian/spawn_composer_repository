@@ -1,5 +1,5 @@
 <?php declare(strict_types = 1);
-namespace SpawnComposerRepository\Database\ComposerRepoTable;
+namespace SpawnComposerRepository\Database\ComposerProjectTable;
 
 use DateTime;
 use Exception;
@@ -8,7 +8,7 @@ use SpawnCore\System\Database\Entity\Entity;
 use SpawnCore\System\Database\Entity\TableDefinition\AbstractTable;
 use SpawnCore\System\Database\Entity\TableRepository;
 
-class ComposerRepoRepository extends TableRepository {
+class ComposerProjectRepository extends TableRepository {
 
     public function __construct(AbstractTable $tableDefinition)
     {
@@ -18,7 +18,7 @@ class ComposerRepoRepository extends TableRepository {
 
     public static function getEntityClass(): string
     {
-        return ComposerRepoEntity::class;
+        return ComposerProjectEntity::class;
     }
 
     protected function getUpdateFilterColumnsFromValues(array $updateValues): array
@@ -31,7 +31,6 @@ class ComposerRepoRepository extends TableRepository {
     protected function prepareValuesForUpdate(array $updateValues): array
     {
         $updateValues['id'] = UUID::hexToBytes($updateValues['id']);
-        $updateValues['projectId'] = $updateValues['projectId'] ? UUID::hexToBytes($updateValues['projectId']) : null;
         $updateValues['updatedAt'] = new DateTime();
 
         return $updateValues;
@@ -39,7 +38,7 @@ class ComposerRepoRepository extends TableRepository {
 
     protected function adjustEntityAfterSuccessfulUpdate(Entity $entity, array $updatedValues): void
     {
-        /** @var ComposerRepoEntity $entity */
+        /** @var ComposerProjectEntity $entity */
         $entity->setUpdatedAt($updatedValues['updatedAt']);
     }
 
@@ -53,7 +52,6 @@ class ComposerRepoRepository extends TableRepository {
         $now = new DateTime();
 
         $values['id'] = UUID::randomBytes();
-        $values['projectId'] = $values['projectId'] ? UUID::hexToBytes($values['projectId']) : null;
         $values['createdAt'] = $now;
         $values['updatedAt'] = $now;
 
@@ -62,10 +60,9 @@ class ComposerRepoRepository extends TableRepository {
 
     protected function adjustEntityAfterSuccessfulInsert(Entity $entity, array $insertedValues): void
     {
-        /** @var ComposerRepoEntity $entity */
+        /** @var ComposerProjectEntity $entity */
         //set the id after the insert command in case of an error
         $entity->setId(UUID::bytesToHex($insertedValues['id']));
-        $entity->setProjectId(UUID::bytesToHex($insertedValues['projectId']));
         $entity->setCreatedAt($insertedValues['createdAt']);
         $entity->setUpdatedAt($insertedValues['updatedAt']);
     }
@@ -75,6 +72,5 @@ class ComposerRepoRepository extends TableRepository {
     protected function adjustValuesAfterSelect(array &$values): void
     {
         $values['id'] = UUID::bytesToHex($values['id']);
-        $values['projectId'] = UUID::bytesToHex($values['projectId']);
     }
 }

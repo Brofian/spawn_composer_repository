@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types = 1);
 namespace SpawnComposerRepository\Controllers;
 
 
@@ -30,6 +29,8 @@ class ComposerController extends AbstractController {
      * @return AbstractResponse
      */
     public function webhookAction(): AbstractResponse {
+
+
 
         return new SimpleResponse('Helloworld');
     }

@@ -1,7 +1,6 @@
 <?php declare(strict_types = 1);
-namespace SpawnComposerRepository\Database\ComposerRepoTable;
+namespace SpawnComposerRepository\Database\ComposerProjectTable;
 
-use SpawnComposerRepository\Database\ComposerProjectTable\ComposerProjectTable;
 use SpawnCore\System\Database\Entity\TableDefinition\AbstractTable;
 use SpawnCore\System\Database\Entity\TableDefinition\DefaultColumns\BooleanColumn;
 use SpawnCore\System\Database\Entity\TableDefinition\DefaultColumns\CreatedAtColumn;
@@ -9,20 +8,17 @@ use SpawnCore\System\Database\Entity\TableDefinition\DefaultColumns\DateTimeColu
 use SpawnCore\System\Database\Entity\TableDefinition\DefaultColumns\StringColumn;
 use SpawnCore\System\Database\Entity\TableDefinition\DefaultColumns\UpdatedAtColumn;
 use SpawnCore\System\Database\Entity\TableDefinition\DefaultColumns\UuidColumn;
-use SpawnCore\System\Database\Entity\TableDefinition\ForeignKey;
 
-class ComposerRepoTable extends AbstractTable {
+class ComposerProjectTable extends AbstractTable {
 
-    public const TABLE_NAME = 'spawn_composer_repository';
+    public const TABLE_NAME = 'spawn_composer_project';
 
     public function getTableColumns(): array
     {
         return [
             new UuidColumn('id', null),
-            new UuidColumn('project_id', new ForeignKey(ComposerProjectTable::TABLE_NAME, 'id', true, false)),
             new StringColumn('name', false, '', true),
             new StringColumn('data', false, '[]', false, 750),
-            new BooleanColumn('active', false),
             new UpdatedAtColumn(),
             new CreatedAtColumn()
         ];

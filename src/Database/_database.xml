@@ -2,13 +2,23 @@
 
 <services>
 
+    <!-- Composer Project -->
+    <service id="composer_repository.database.table.composer_project" class="SpawnComposerRepository\Database\ComposerProjectTable\ComposerProjectTable" static="true">
+        <tag>database.table</tag>
+    </service>
+
+    <service id="composer_repository.repository.composer_project" class="SpawnComposerRepository\Database\ComposerProjectTable\ComposerProjectRepository" static="true">
+        <argument type="service" value="composer_repository.database.table.composer_project" />
+        <tag>base.service.static</tag>
+    </service>
+
     <!-- Composer Repository -->
     <service id="composer_repository.database.table.composer_repo" class="SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoTable" static="true">
         <tag>database.table</tag>
     </service>
 
     <service id="composer_repository.repository.composer_repo" class="SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoRepository" static="true">
-        <argument type="service" value="system.database.table.administrator" />
+        <argument type="service" value="composer_repository.database.table.composer_repo" />
         <tag>base.service.static</tag>
     </service>
 
