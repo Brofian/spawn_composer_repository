@@ -68,7 +68,6 @@ class ComposerProjectRepository extends TableRepository {
     }
 
 
-
     protected function adjustValuesAfterSelect(array &$values): void
     {
         $values['id'] = UUID::bytesToHex($values['id']);

@@ -81,8 +81,11 @@ class ComposerProjectService {
         return $this->composerProjectRepository->count($criteria ?? new Criteria());
     }
 
-    public function createProject(string $name, string $data): ?ComposerProjectEntity {
+    public function createProject(string $name, string $data, ?array &$errors): ?ComposerProjectEntity {
+        $errors = [];
+
         if(!JsonHelper::validateJson($data)) {
+            $errors[] = 'Invalid json data: ' . $data;
             return null;
         }
 
@@ -92,6 +95,7 @@ class ComposerProjectService {
             $this->composerProjectRepository->upsert($entity);
         }
         catch (Exception $e) {
+            $errors[] = $e->getMessage();
             return null;
         }
 

@@ -105,7 +105,7 @@ class ComposerBackendController extends AbstractBackendController {
         $repositories = $project->repositories;
         /** @var array $repositoryArray */
         $repositoryArray = $repositories->getArrayRange($numberOfEntriesPerPage, ($page-1)*$numberOfEntriesPerPage);
-        $totalNumberOfEntries = $repositories->count();
+        $totalNumberOfEntries = max($repositories->count(), 1);
         $availablePages = (int)ceil($totalNumberOfEntries / $numberOfEntriesPerPage);
 
         $this->twig->assignBulk([
@@ -154,6 +154,32 @@ class ComposerBackendController extends AbstractBackendController {
         $projectId = $postData['projectId'] ?? null;
 
         $this->composerRepositoryService->createRepository($name, $projectId, $errors);
+
+        return new JsonResponse([
+            'success' => empty($errors),
+            'errors' => $errors,
+            'reload' => true
+        ]);
+    }
+
+
+    /**
+     * @route /backend/composer/project/create
+     * @return AbstractResponse
+     */
+    public function createProjectAction(): AbstractResponse {
+        $postData = $this->request->getPost()->getArray();
+        if(!isset($postData['name'])) {
+            return new JsonResponse([
+                'success' => false,
+                'errors' => ['Missing fields in request'],
+                'errorFields' => ['name']
+            ]);
+        }
+
+        $name = $postData['name'];
+
+        $this->composerProjectService->createProject($name, '[]', $errors);
 
         return new JsonResponse([
             'success' => empty($errors),
