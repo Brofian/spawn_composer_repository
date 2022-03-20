@@ -2,6 +2,7 @@
 namespace SpawnComposerRepository\Controllers;
 
 
+use Exception;
 use SpawnCore\System\CardinalSystem\Request;
 use SpawnCore\System\Custom\FoundationStorage\AbstractController;
 use SpawnCore\System\Custom\Response\AbstractResponse;
@@ -28,6 +29,7 @@ class ComposerController extends AbstractController {
     /**
      * @route /composer/repository/webhook
      * @return AbstractResponse
+     * @throws Exception
      */
     public function webhookAction(): AbstractResponse {
         /** @var Request $request */
@@ -46,6 +48,8 @@ class ComposerController extends AbstractController {
         file_put_contents($file, var_export($request->getGet()->getArray(), true), FILE_APPEND);
         file_put_contents($file, PHP_EOL.'COOKIES:'.PHP_EOL, FILE_APPEND);
         file_put_contents($file, var_export($request->getCookies()->getArray(), true), FILE_APPEND);
+        file_put_contents($file, PHP_EOL.'PHP stdin:'.PHP_EOL, FILE_APPEND);
+        file_put_contents($file, file_get_contents('php://input'), FILE_APPEND);
         file_put_contents($file, PHP_EOL.str_repeat('-', 50).PHP_EOL, FILE_APPEND);
 
         return new SimpleResponse('');
