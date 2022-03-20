@@ -3,9 +3,12 @@ namespace SpawnComposerRepository\Controllers;
 
 
 use Exception;
+use SpawnComposerRepository\Services\ComposerPackageCreator;
+use SpawnComposerRepository\Services\GithubWebhookInterpreter;
 use SpawnCore\System\CardinalSystem\Request;
 use SpawnCore\System\Custom\FoundationStorage\AbstractController;
 use SpawnCore\System\Custom\Gadgets\FileEditor;
+use SpawnCore\System\Custom\Gadgets\JsonHelper;
 use SpawnCore\System\Custom\Response\AbstractResponse;
 use SpawnCore\System\Custom\Response\CacheControlState;
 use SpawnCore\System\Custom\Response\JsonResponse;
@@ -22,10 +25,36 @@ class ComposerController extends AbstractController {
      */
     public function packagesAction(): AbstractResponse {
 
-        $data = [];
+        $data = file_get_contents(__DIR__.'/webhook.json');
+        $webhookInterpreter = new GithubWebhookInterpreter($data);
 
 
-        return new JsonResponse($data, new CacheControlState(false, true, true, 10));
+        dd(
+            $webhookInterpreter->getTime(),
+            $webhookInterpreter->getBranches(),
+            $webhookInterpreter->getTags()
+        );
+
+
+        $packageCreator = new ComposerPackageCreator();
+        $packageCreator->addVersionToRepository('spawn/app', 'dev-develop', [
+            'source' => [
+                'type' => '',
+                'url' => '',
+                'reference' => ''
+            ],
+            'dist' => [
+                'type' => '',
+                'url' => '',
+                'reference' => '',
+                'shasum' => ''
+            ],
+            'time' => '',
+            'type' => '',
+            'description' => ''
+        ]);
+
+        return new JsonResponse($packageCreator->getDefinition(), new CacheControlState(false, true, true, 10));
     }
 
 
@@ -68,9 +97,28 @@ class ComposerController extends AbstractController {
         /** @var Request $request */
         $request = $this->container->get('system.kernel.request');
 
+        $errors = [];
+        try {
+            $data = file_get_contents('php://input');
+            $data = file_get_contents(__DIR__.'/webhook.json');
+            $json = JsonHelper::jsonToArray($data);
+
+            $repository = $json['repository'];
+            $ref = $json['ref'];
+            $newHash = $json['after'];
+            $newHash = $json['head_commit'];
+
+            dd($json);
+        }
+        catch (Exception $e) {
+            $errors[] = $e->getMessage();
+        }
 
 
-        return new SimpleResponse('');
+
+        return new JsonResponse([
+            'success' => empty($errors)
+        ]);
     }
 
 }
