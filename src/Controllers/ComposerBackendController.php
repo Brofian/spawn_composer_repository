@@ -135,4 +135,31 @@ class ComposerBackendController extends AbstractBackendController {
         return new TwigResponse('backend/index.html.twig');
     }
 
+
+    /**
+     * @route /backend/composer/repository/create
+     * @return AbstractResponse
+     */
+    public function createRepositoryAction(): AbstractResponse {
+        $postData = $this->request->getPost()->getArray();
+        if(!isset($postData['name'])) {
+            return new JsonResponse([
+                'success' => false,
+                'errors' => ['Missing fields in request'],
+                'errorFields' => ['name']
+            ]);
+        }
+
+        $name = $postData['name'];
+        $projectId = $postData['projectId'] ?? null;
+
+        $this->composerRepositoryService->createRepository($name, $projectId, $errors);
+
+        return new JsonResponse([
+            'success' => empty($errors),
+            'errors' => $errors,
+            'reload' => true
+        ]);
+    }
+
 }

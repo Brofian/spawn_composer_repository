@@ -7,6 +7,7 @@ use SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoEntity;
 use SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoRepository;
 use SpawnCore\System\Custom\Gadgets\UUID;
 use SpawnCore\System\Custom\Throwables\DatabaseConnectionException;
+use SpawnCore\System\Custom\Throwables\WrongEntityForRepositoryException;
 use SpawnCore\System\Database\Criteria\Criteria;
 use SpawnCore\System\Database\Criteria\Filters\EqualsFilter;
 use SpawnCore\System\Database\Entity\EntityCollection;
@@ -51,5 +52,19 @@ class ComposerRepositoryService {
     }
 
 
+    public function createRepository(string $name, ?string $projectId = null, ?array &$errors = null): ?ComposerRepoEntity {
+        $errors = [];
+
+        $entity = new ComposerRepoEntity($name, '{}', $projectId);
+
+        try {
+            $this->composerRepository->upsert($entity);
+            return $entity;
+        }
+        catch (Exception $e) {
+            $errors[] = $e->getMessage();
+            return null;
+        }
+    }
 
 }
