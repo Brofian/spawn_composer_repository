@@ -36,6 +36,14 @@ class ComposerRepositoryService {
         }
     }
 
+    public function getRepositoryById(string $repositoryId): ?ComposerRepoEntity {
+        try {
+            $collection = $this->getRepositoriesByCriteria(new Criteria(new EqualsFilter('id', $repositoryId)));
+            return $collection->first();
+        } catch (Exception $e) {
+            return null;
+        }
+    }
 
 
     public function getRepositoriesByCriteria(Criteria $criteria): EntityCollection {

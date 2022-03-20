@@ -3,6 +3,7 @@ namespace SpawnComposerRepository\Database\ComposerRepoTable;
 
 
 use DateTime;
+use SpawnCore\System\Custom\Gadgets\JsonHelper;
 use SpawnCore\System\Database\Entity\Entity;
 use SpawnCore\System\Database\Entity\EntityTraits\EntityCreatedAtTrait;
 use SpawnCore\System\Database\Entity\EntityTraits\EntityIDTrait;
@@ -89,9 +90,21 @@ class ComposerRepoEntityDefinition extends Entity
         return $this->data;
     }
 
+    public function getDataArray(): array
+    {
+        return JsonHelper::jsonToArray($this->data, );
+    }
+
+
     public function setData(string $data): self
     {
         $this->data = $data;
+        return $this;
+    }
+
+    public function setDataArray(array $data): self
+    {
+        $this->data = JsonHelper::arrayToJson($data);
         return $this;
     }
 

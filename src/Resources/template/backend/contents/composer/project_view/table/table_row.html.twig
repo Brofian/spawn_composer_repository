@@ -1,0 +1,29 @@
+{% block test2 %}
+
+    <tr>
+
+        <td class="text-align-center" style="width: 1em">
+
+            {% if not repository.active %}
+                <span class="signal gray" title="Inaktiv"></span>
+            {% else %}
+                <span class="signal green" title="Aktiv"></span>
+            {% endif %}
+
+        </td>
+
+        <td>
+            <a href="{{ seo_url('composer_repository.backend_controller.composer', 'repositoryOverviewAction', {repository: repository.id}) }}">
+                {{ repository.name }}
+            </a>
+        </td>
+
+        <td>
+            {{ repository.data }}
+        </td>
+
+
+    </tr>
+
+
+{% endblock %}

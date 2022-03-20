@@ -1,0 +1,18 @@
+{% block content_inner %}
+
+    {% include 'backend/contents/misc/headline.html.twig' with {
+        title: 'Composer Repository Integration',
+        previous: seo_url('composer_repository.backend_controller.composer', 'indexAction')
+    } only %}
+
+    <div class="container">
+
+        <div class="col-1">
+            <h2>Repository: {{ repository.name }}</h2>
+        </div>
+
+        <div class="section" style="white-space: pre">{{ repository.dataArray|json_encode(constant('JSON_PRETTY_PRINT')) }}</div>
+
+    </div>
+
+{% endblock %}

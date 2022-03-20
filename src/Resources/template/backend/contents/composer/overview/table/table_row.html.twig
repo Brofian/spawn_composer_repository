@@ -1,0 +1,36 @@
+{% block test2 %}
+
+    <tr>
+
+        <td class="text-align-center" style="width: 1em">
+
+            {% if not project.repositories or project.repositories.count < 1 %}
+                <span class="signal gray" title="Leer"></span>
+            {% else %}
+                <span class="signal green" title="In Benutzung"></span>
+            {% endif %}
+
+        </td>
+
+        <td>
+            <a href="{{ seo_url('composer_repository.backend_controller.composer', 'projectOverviewAction', {project: project.id}) }}">
+                {{ project.name }}
+            </a>
+        </td>
+
+        <td>
+            {{ project.data }}
+        </td>
+
+        <td>
+            {% if not project.repositories or project.repositories.count < 1 %}
+                0
+            {% else %}
+                {{ project.repositories.count }}
+            {% endif %}
+        </td>
+
+    </tr>
+
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% block test %}
+
+    <table class="js-resizable-columns">
+
+        <thead>
+
+        <tr>
+
+            <th></th>
+            <th>Name</th>
+            <th>Data</th>
+            <th>No. Repositories</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+        {% for project in projects %}
+
+            {% include 'backend/contents/composer/overview/table/table_row.html.twig' %}
+
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+    <div class="section">
+        {% set this_seo_url = seo_url('composer_repository.backend_controller.composer', 'indexAction') %}
+        {% include 'backend/contents/misc/table_pagination.html.twig' with {
+            page: table_info.page,
+            availablePages: table_info.availablePages,
+            entriesPerPage: table_info.entriesPerPage,
+            tableUrl: this_seo_url,
+            getParameters: {}
+        } only %}
+
+    </div>
+
+{% endblock %}

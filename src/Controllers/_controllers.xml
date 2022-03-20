@@ -8,6 +8,8 @@
 
     <service id="composer_repository.backend_controller.composer" class="SpawnComposerRepository\Controllers\ComposerBackendController">
         <argument type="service" value="composer_repository.service.composer_project_service" />
+        <argument type="service" value="composer_repository.service.composer_repository_service" />
+        <argument type="service" value="system.kernel.request" />
         <tag>backend.controller</tag>
     </service>
 

@@ -1,0 +1,40 @@
+{% block content_inner %}
+
+    {% include 'backend/contents/misc/headline.html.twig' with {
+        title: 'Composer Repository Integration',
+        previous: seo_url('composer_repository.backend_controller.composer', 'indexAction')
+    } only %}
+
+    <div class="container">
+
+        <div class="col-1">
+            <h2>Project: {{ project.name }}</h2>
+        </div>
+
+
+        <form method="post" action="#" class="section">
+
+            <div class="col-1">
+                <label>
+                    Project-Name: <input type="text" value="{{ project.name }}" />
+                </label>
+            </div>
+
+            <div class="col-1 justify-content-flex-end">
+                <input type="submit" value="Speichern" />
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="container">
+
+        <h3>Repositories: </h3>
+
+        {% include'backend/contents/composer/project_view/table/table.html.twig' %}
+
+    </div>
+
+
+{% endblock %}

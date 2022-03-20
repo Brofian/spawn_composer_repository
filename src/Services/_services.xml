@@ -7,7 +7,7 @@
     </service>
 
 
-    <service id="composer_repository.service.composerRepositoryService" class="SpawnComposerRepository\Services\ComposerRepositoryService">
+    <service id="composer_repository.service.composer_repository_service" class="SpawnComposerRepository\Services\ComposerRepositoryService">
         <argument type="service" value="composer_repository.repository.composer_repo" />
     </service>
 

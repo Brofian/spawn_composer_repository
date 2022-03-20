@@ -13,6 +13,7 @@ use SpawnCore\System\Custom\Gadgets\JsonHelper;
 use SpawnCore\System\Custom\Gadgets\UUID;
 use SpawnCore\System\Custom\Response\Exceptions\JsonConvertionException;
 use SpawnCore\System\Custom\Throwables\DatabaseConnectionException;
+use SpawnCore\System\Custom\Throwables\SubscribeToNotAnEventException;
 use SpawnCore\System\Database\Criteria\Criteria;
 use SpawnCore\System\Database\Criteria\Filters\EqualsFilter;
 use SpawnCore\System\Database\Criteria\Filters\InFilter;
@@ -42,17 +43,24 @@ class ComposerProjectService {
         }
     }
 
-    public function getProjects(bool $includeRepositories = false): EntityCollection {
-        return $this->getProjectsByCriteria(new Criteria(), $includeRepositories);
+    public function getProjects(bool $includeRepositories = false, int $limit = 99999, int $offset = 0): EntityCollection {
+        return $this->getProjectsByCriteria(new Criteria(), $includeRepositories, $limit, $offset);
     }
 
-    public function getProjectsByCriteria(Criteria $criteria, bool $includeRepositories): EntityCollection {
-        $projects = $this->composerProjectRepository->search($criteria);
+
+    /**
+     * @throws DatabaseConnectionException
+     * @throws RepositoryException
+     * @throws \Doctrine\DBAL\Exception
+     * @throws SubscribeToNotAnEventException
+     */
+    public function getProjectsByCriteria(Criteria $criteria, bool $includeRepositories, int $limit = 99999, int $offset = 0): EntityCollection {
+        $projects = $this->composerProjectRepository->search($criteria, $limit, $offset);
 
 
         if($includeRepositories) {
             /** @var ComposerRepositoryService $repositoryService */
-            $repositoryService = ServiceContainerProvider::getServiceContainer()->get('composer_repository.service.composerRepositoryService');
+            $repositoryService = ServiceContainerProvider::getServiceContainer()->get('composer_repository.service.composer_repository_service');
 
             /** @var ComposerProjectEntity $project */
             foreach($projects as $project) {
@@ -63,6 +71,14 @@ class ComposerProjectService {
 
 
         return $projects;
+    }
+
+    /**
+     * @throws DatabaseConnectionException
+     * @throws RepositoryException
+     */
+    public function getNumberOfProjects(?Criteria $criteria = null): int {
+        return $this->composerProjectRepository->count($criteria ?? new Criteria());
     }
 
     public function createProject(string $name, string $data): ?ComposerProjectEntity {
