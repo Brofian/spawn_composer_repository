@@ -7,6 +7,7 @@ use SpawnComposerRepository\Services\ComposerProjectService;
 use SpawnComposerRepository\Services\ComposerRepositoryService;
 use SpawnCore\System\CardinalSystem\Request;
 use SpawnCore\System\Custom\FoundationStorage\AbstractBackendController;
+use SpawnCore\System\Custom\Gadgets\FileEditor;
 use SpawnCore\System\Custom\Gadgets\UUID;
 use SpawnCore\System\Custom\Response\AbstractResponse;
 use SpawnCore\System\Custom\Response\CacheControlState;
@@ -135,6 +136,21 @@ class ComposerBackendController extends AbstractBackendController {
         return new TwigResponse('backend/index.html.twig');
     }
 
+
+    /**
+     * @route /backend/composer/webhook/check
+     */
+    public function webhookCheckAction(): AbstractResponse {
+
+        $checkData = '';
+        if(file_exists(ComposerController::WEBHOOK_LOG)) {
+            $checkData = FileEditor::getFileContent(ComposerController::WEBHOOK_LOG);
+        }
+
+        $this->twig->assign('check_data', $checkData);
+        $this->twig->assign('content_file', 'backend/contents/composer/webhook_check/content.html.twig');
+        return new TwigResponse('backend/index.html.twig');
+    }
 
     /**
      * @route /backend/composer/repository/create

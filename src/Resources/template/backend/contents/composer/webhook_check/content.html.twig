@@ -1,0 +1,14 @@
+{% block content_inner %}
+
+    {% include 'backend/contents/misc/headline.html.twig' with {
+        title: 'Composer Repository Integration',
+        previous: seo_url('composer_repository.backend_controller.composer', 'indexAction')
+    } only %}
+
+    <div class="container">
+
+        <span style="white-space: pre">{{ check_data }}</span>
+
+    </div>
+
+{% endblock %}
