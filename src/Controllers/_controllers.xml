@@ -3,6 +3,7 @@
 <services>
 
     <service id="composer_repository.controller.composer" class="SpawnComposerRepository\Controllers\ComposerController">
+        <argument type="service" value="composer_repository.service.composer_repository_service" />
         <tag>base.controller</tag>
     </service>
 

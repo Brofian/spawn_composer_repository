@@ -4,6 +4,7 @@ namespace SpawnComposerRepository\Controllers;
 
 use Exception;
 use SpawnComposerRepository\Services\ComposerPackageCreator;
+use SpawnComposerRepository\Services\ComposerRepositoryService;
 use SpawnComposerRepository\Services\GithubWebhookInterpreter;
 use SpawnCore\System\CardinalSystem\Request;
 use SpawnCore\System\Custom\FoundationStorage\AbstractController;
@@ -18,6 +19,13 @@ class ComposerController extends AbstractController {
 
     public const WEBHOOK_LOG = ROOT.'/var/log/webhook_log.txt';
 
+    protected ComposerRepositoryService $repositoryService;
+
+    public function __construct(ComposerRepositoryService $repositoryService)   {
+        parent::__construct();
+        $this->repositoryService = $repositoryService;
+    }
+
 
     /**
      * @route /composer/repository/packages.json
@@ -29,30 +37,52 @@ class ComposerController extends AbstractController {
         $webhookInterpreter = new GithubWebhookInterpreter($data);
 
 
+        $packageCreator = new ComposerPackageCreator();
+        foreach($webhookInterpreter->getBranches() as $branch => $branchData) {
+            $packageCreator->addVersionToRepository('spawn/app', 'dev-'.$branch, [
+                'source' => [
+                    'type' => 'git',
+                    'url' => $webhookInterpreter->getRemoteUrl(),
+                    'reference' => $branchData['sha']
+                ],
+                'dist' => [
+                    'type' => 'zip',
+                    'url' => $webhookInterpreter->getDownloadUrl($branch, false),
+                    'reference' => $branchData['sha'],
+                    'shasum' => ''
+                ],
+                'time' => $webhookInterpreter->getTime(),
+                'type' => 'library', // TODO: read this automatically from repository
+                'description' => '' // TODO: read this automatically from repository
+            ]);
+        }
+
+        foreach($webhookInterpreter->getTags() as $tag => $tagData) {
+            $packageCreator->addVersionToRepository('spawn/app', $tag, [
+                'source' => [
+                    'type' => 'git',
+                    'url' => $webhookInterpreter->getRemoteUrl(),
+                    'reference' => $branchData['sha']
+                ],
+                'dist' => [
+                    'type' => 'zip',
+                    'url' => $webhookInterpreter->getDownloadUrl($tag, false),
+                    'reference' => $branchData['sha'],
+                    'shasum' => ''
+                ],
+                'time' => $webhookInterpreter->getTime(),
+                'type' => 'library', // TODO: read this automatically from repository
+                'description' => '' // TODO: read this automatically from repository
+            ]);
+        }
+
+        /*
         dd(
             $webhookInterpreter->getTime(),
             $webhookInterpreter->getBranches(),
             $webhookInterpreter->getTags()
         );
-
-
-        $packageCreator = new ComposerPackageCreator();
-        $packageCreator->addVersionToRepository('spawn/app', 'dev-develop', [
-            'source' => [
-                'type' => '',
-                'url' => '',
-                'reference' => ''
-            ],
-            'dist' => [
-                'type' => '',
-                'url' => '',
-                'reference' => '',
-                'shasum' => ''
-            ],
-            'time' => '',
-            'type' => '',
-            'description' => ''
-        ]);
+        */
 
         return new JsonResponse($packageCreator->getDefinition(), new CacheControlState(false, true, true, 10));
     }
@@ -101,24 +131,75 @@ class ComposerController extends AbstractController {
         try {
             $data = file_get_contents('php://input');
             $data = file_get_contents(__DIR__.'/webhook.json');
+
+
             $json = JsonHelper::jsonToArray($data);
+            $webhookInterpreter = new GithubWebhookInterpreter($data);
 
-            $repository = $json['repository'];
-            $ref = $json['ref'];
-            $newHash = $json['after'];
-            $newHash = $json['head_commit'];
+            $repository = $this->repositoryService->getRepositoryByName($webhookInterpreter->getRepositoryName());
+            if($repository === null) {
+                throw new \RuntimeException('Tried updating non existing repository!');
+            }
 
-            dd($json);
+
+
+            $packageCreator = new ComposerPackageCreator();
+            foreach($webhookInterpreter->getBranches() as $branch => $branchData) {
+                $packageCreator->addVersionToRepository('spawn/app', 'dev-'.$branch, [
+                    'source' => [
+                        'type' => 'git',
+                        'url' => $webhookInterpreter->getRemoteUrl(),
+                        'reference' => $branchData['sha']
+                    ],
+                    'dist' => [
+                        'type' => 'zip',
+                        'url' => $webhookInterpreter->getDownloadUrl($branch, false),
+                        'reference' => $branchData['sha'],
+                        'shasum' => ''
+                    ],
+                    'time' => $webhookInterpreter->getTime(),
+                    'type' => 'library', // TODO: read this automatically from repository
+                    'description' => '' // TODO: read this automatically from repository
+                ]);
+            }
+
+            foreach($webhookInterpreter->getTags() as $tag => $tagData) {
+                $packageCreator->addVersionToRepository('spawn/app', $tag, [
+                    'source' => [
+                        'type' => 'git',
+                        'url' => $webhookInterpreter->getRemoteUrl(),
+                        'reference' => $branchData['sha']
+                    ],
+                    'dist' => [
+                        'type' => 'zip',
+                        'url' => $webhookInterpreter->getDownloadUrl($tag, false),
+                        'reference' => $branchData['sha'],
+                        'shasum' => ''
+                    ],
+                    'time' => $webhookInterpreter->getTime(),
+                    'type' => 'library', // TODO: read this automatically from repository
+                    'description' => '' // TODO: read this automatically from repository
+                ]);
+            }
+
+            $repository->setData(JsonHelper::arrayToJson(($packageCreator->getDefinition())));
+            if(!$this->repositoryService->upsertRepository($repository)) {
+                throw new \RuntimeException('Could not save repository');
+            }
         }
         catch (Exception $e) {
             $errors[] = $e->getMessage();
         }
 
-
-
-        return new JsonResponse([
+        $response = [
             'success' => empty($errors)
-        ]);
+        ];
+
+        if(MODE === 'dev') {
+            $response['errors'] = $errors;
+        }
+
+        return new JsonResponse($response);
     }
 
 }

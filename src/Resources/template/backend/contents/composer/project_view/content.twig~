@@ -1,0 +1,14 @@
+{% block content_inner %}
+
+    {% include 'backend/contents/misc/headline.html.twig' with {
+        title: 'Composer Repository Integration'
+    } only %}
+
+    <div class="container">
+
+        {% include'backend/contents/composer/project_view/table/table.html.twig' %}
+
+    </div>
+
+
+{% endblock %}

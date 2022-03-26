@@ -24,6 +24,22 @@ class GithubWebhookInterpreter
         return $this->webhookData['head_commit']['timestamp'];
     }
 
+    public function getRepositoryName(): string {
+        return $this->webhookData['repository']['full_name'];
+    }
+
+    public function getRemoteUrl(): string {
+        return $this->webhookData['repository']['ssh_url'];
+    }
+
+    public function getDownloadUrl(string $branch, bool $useTar = false): string {
+        return sprintf('%s/%s/%s',
+            $this->webhookData['repository']['svn_url'],
+            $useTar ? 'tarball' : 'zipball',
+            $branch
+        );
+    }
+
     public function getBranches(): array {
         return $this->branches;
     }
@@ -43,7 +59,7 @@ class GithubWebhookInterpreter
             $this->branches[$branch['name']] = [
                 'name' => $branch['name'],
                 'sha' => $branch['commit']['sha'],
-                'url' => $branch['commit']['url']
+                'url' => $branch['commit']['url'],
             ];
         }
     }

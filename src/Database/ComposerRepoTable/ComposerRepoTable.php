@@ -20,8 +20,8 @@ class ComposerRepoTable extends AbstractTable {
         return [
             new UuidColumn('id', null),
             new UuidColumn('projectId', new ForeignKey(ComposerProjectTable::TABLE_NAME, 'id', true, false)),
-            new StringColumn('name', false, '', true),
-            new StringColumn('data', false, '[]', false, 750),
+            new StringColumn('name', false, '', true, 750),
+            new StringColumn('data', false, '[]', false),
             new BooleanColumn('active', false),
             new UpdatedAtColumn(),
             new CreatedAtColumn()

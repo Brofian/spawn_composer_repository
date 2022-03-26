@@ -3,6 +3,7 @@ namespace SpawnComposerRepository\Services;
 
 
 use Exception;
+use SpawnComposerRepository\Database\ComposerProjectTable\ComposerProjectRepository;
 use SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoEntity;
 use SpawnComposerRepository\Database\ComposerRepoTable\ComposerRepoRepository;
 use SpawnCore\System\Custom\Gadgets\UUID;
@@ -67,4 +68,8 @@ class ComposerRepositoryService {
         }
     }
 
+
+    public function upsertRepository(ComposerRepoEntity $repository): bool {
+        return $this->composerRepository->upsert($repository);
+    }
 }
