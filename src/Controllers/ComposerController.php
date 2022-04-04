@@ -29,6 +29,8 @@ class ComposerController extends AbstractController {
 
     /**
      * @route /composer/repository/packages.json
+     * @name "composer.repository.packages"
+     * @api
      * @return AbstractResponse
      */
     public function packagesAction(): AbstractResponse {
@@ -90,6 +92,8 @@ class ComposerController extends AbstractController {
 
     /**
      * @route /composer/repository/webhook/check
+     * @name "composer.repository.webhook.check"
+     * @api
      * @throws Exception
      */
     public function webhookCheckAction(): AbstractResponse {
@@ -120,6 +124,7 @@ class ComposerController extends AbstractController {
 
     /**
      * @route /composer/repository/webhook
+     * @name "composer.repository.webhook"
      * @return AbstractResponse
      * @throws Exception
      */

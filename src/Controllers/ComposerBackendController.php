@@ -61,6 +61,7 @@ class ComposerBackendController extends AbstractBackendController {
 
     /**
      * @route /backend/composer
+     * @name "composer.backend.index"
      * @locked
      * @throws DatabaseConnectionException
      * @throws RepositoryException
@@ -90,6 +91,7 @@ class ComposerBackendController extends AbstractBackendController {
 
     /**
      * @route /backend/composer/project/{}
+     * @name "composer.backend.project"
      * @locked
      * @throws DatabaseConnectionException
      * @throws RepositoryException
@@ -126,6 +128,7 @@ class ComposerBackendController extends AbstractBackendController {
 
     /**
      * @route /backend/composer/repository/{}
+     * @name "composer.backend.project.repository"
      * @locked
      */
     public function repositoryOverviewAction(string $repositoryId): AbstractResponse {
@@ -139,6 +142,8 @@ class ComposerBackendController extends AbstractBackendController {
 
     /**
      * @route /backend/composer/webhook/check
+     * @name "composer.backend.webhook.check"
+     * @locked
      */
     public function webhookCheckAction(): AbstractResponse {
 
@@ -154,6 +159,9 @@ class ComposerBackendController extends AbstractBackendController {
 
     /**
      * @route /backend/composer/repository/create
+     * @name "composer.backend.repository.create"
+     * @api
+     * @locked
      * @return AbstractResponse
      */
     public function createRepositoryAction(): AbstractResponse {
@@ -181,6 +189,9 @@ class ComposerBackendController extends AbstractBackendController {
 
     /**
      * @route /backend/composer/project/create
+     * @name "composer.backend.project.create"
+     * @api
+     * @locked
      * @return AbstractResponse
      */
     public function createProjectAction(): AbstractResponse {
