@@ -26,7 +26,7 @@
     </table>
 
     <div class="section">
-        {% set this_seo_url = seo_url('composer_repository.backend_controller.composer', 'projectOverviewAction') %}
+        {% set this_seo_url = seo_url('composer.backend.project') %}
         {% include 'backend/contents/misc/table_pagination.html.twig' with {
             page: table_info.page,
             availablePages: table_info.availablePages,

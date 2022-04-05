@@ -49,8 +49,8 @@ class ComposerBackendController extends AbstractBackendController {
                 'color' => "#914b26",
                 'actions' => [
                     [
-                        'controller' => '%self.key%',
-                        'action' => 'indexAction',
+                        'route' => 'composer.backend.index',
+                        'parameters' => [],
                         'title' => 'overview'
                     ]
                 ]

@@ -8,7 +8,7 @@
 
         <div class="flex-container">
             <div class="col-2">
-                <a href="{{ seo_url('composer_repository.backend_controller.composer', 'webhookCheckAction') }}">
+                <a href="{{ seo_url('composer.backend.webhook.check') }}">
                     <div class="btn btn-square-yellow pseudo-spacer-bottom">
                         Check Debug Log
                     </div>
@@ -23,7 +23,7 @@
             <div class="flex-container js-accordion-body">
                 <div class="col-1 section">
                     <form method="post"
-                          action="{{ seo_url('composer_repository.backend_controller.composer','createProjectAction') }}"
+                          action="{{ seo_url('composer.backend.project.create') }}"
                           data-ajax-form
                     >
 
