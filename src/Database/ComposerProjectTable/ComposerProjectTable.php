@@ -17,7 +17,7 @@ class ComposerProjectTable extends AbstractTable {
     {
         return [
             new UuidColumn('id', null),
-            new StringColumn('name', false, '', true),
+            new StringColumn('name', false, '', true, 750),
             new StringColumn('data', false, '[]', false, 750),
             new UpdatedAtColumn(),
             new CreatedAtColumn()
